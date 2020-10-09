@@ -25,4 +25,4 @@ jobs:
 
       - name: Run Terminus command
         run: |
-          terminus remote:drush gsati-cron-test.dev -- status
+          terminus remote:drush gsati-cron-test.dev -- php-eval var_dump($_ENV);
