@@ -1,0 +1,28 @@
+name: GSATi Cron test
+on:
+  push:
+  branches: [main]
+  #schedule:
+  # * is a special character in YAML so you have to quote this string
+    # - cron:  '*/15 * * * *'
+
+jobs:
+  remote_terminus:
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_CONTEXT: ${{ toJson(github) }}
+    steps:
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2.0.3
+        with:
+          key: ${{ secrets.SSH_KEY }}
+          known_hosts: drush.in
+
+      - name: Installing Terminus
+        uses: kopepasah/setup-pantheon-terminus@master
+        with:
+          pantheon-machine-token: ${{ secrets.TERMINUS_MACHINE_TOKEN }}
+
+      - name: Run Terminus command
+        run: |
+          terminus remote:drush gsati-cron-test.dev -- status
